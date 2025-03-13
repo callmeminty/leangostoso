@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Mini App</title>
     
-    <!-- Adicionando o script de anúncios -->
-    <script src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
+    <!-- Adicionando o script de anúncios de forma assíncrona -->
+    <script async src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; }
-        button { padding: 10px 20px; font-size: 18px; }
+        button { padding: 10px 20px; font-size: 18px; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h1>Olá, <span id="user"></span>!</h1>
     <button onclick="fecharApp()">Fechar App</button>
+    
+    <!-- Botão para exibir o popup de recompensa -->
+    <button onclick="mostrarPopupRecompensa()">Assistir Anúncio</button>
 
     <script>
         let tg = window.Telegram.WebApp;
@@ -26,6 +29,18 @@
 
         function fecharApp() {
             tg.close();
+        }
+
+        function mostrarPopupRecompensa() {
+            show_9081224('pop').then(() => {
+                // Usuário assistiu ao anúncio até o fim ou fechou no formato intersticial
+                alert("Você assistiu ao anúncio! Obrigado pela sua paciência.");
+                // Aqui você pode adicionar o código para recompensar o usuário
+            }).catch(e => {
+                // Se houver um erro ao tentar exibir o anúncio
+                console.error("Erro ao carregar o anúncio: ", e);
+                alert("Houve um erro ao tentar exibir o anúncio. Tente novamente.");
+            });
         }
     </script>
 </body>
