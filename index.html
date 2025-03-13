@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Mini App</title>
     
-    <!-- Adicionando o script de anúncios de forma assíncrona -->
+    <!-- Script de anúncios de forma assíncrona -->
     <script async src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -18,8 +18,9 @@
     <h1>Olá, <span id="user"></span>!</h1>
     <button onclick="fecharApp()">Fechar App</button>
     
-    <!-- Botão para exibir o popup de recompensa -->
-    <button onclick="mostrarPopupRecompensa()">Assistir Anúncio</button>
+    <!-- Botões para exibir os anúncios -->
+    <button onclick="mostrarPopupRecompensa()">Assistir Anúncio (Rewarded)</button>
+    <button onclick="exibirInterstitial()">Mostrar Anúncio In-App</button>
 
     <script>
         let tg = window.Telegram.WebApp;
@@ -31,15 +32,34 @@
             tg.close();
         }
 
+        // Função para exibir o anúncio de recompensa
         function mostrarPopupRecompensa() {
-            show_9081224('pop').then(() => {
-                // Usuário assistiu ao anúncio até o fim ou fechou no formato intersticial
-                alert("Você assistiu ao anúncio! Obrigado pela sua paciência.");
-                // Aqui você pode adicionar o código para recompensar o usuário
+            show_9081224().then(() => {
+                // Usuário assistiu ao anúncio até o fim
+                alert('Você assistiu ao anúncio!');
+                // Adicione a lógica de recompensa aqui
             }).catch(e => {
-                // Se houver um erro ao tentar exibir o anúncio
+                // Erro ao tentar exibir o anúncio
                 console.error("Erro ao carregar o anúncio: ", e);
-                alert("Houve um erro ao tentar exibir o anúncio. Tente novamente.");
+                alert("Houve um erro ao tentar exibir o anúncio.");
+            });
+        }
+
+        // Função para exibir o anúncio In-App Interstitial
+        function exibirInterstitial() {
+            show_9081224({ 
+                type: 'inApp', 
+                inAppSettings: { 
+                    frequency: 2, 
+                    capping: 0.1, 
+                    interval: 30, 
+                    timeout: 5, 
+                    everyPage: false 
+                } 
+            }).then(() => {
+                console.log("Anúncio In-App exibido com sucesso.");
+            }).catch(e => {
+                console.error("Erro ao exibir o anúncio In-App: ", e);
             });
         }
     </script>
