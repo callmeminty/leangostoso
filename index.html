@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Mini App</title>
+    
+    <!-- Adicionando o script de anúncios -->
+    <script src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; }
+        button { padding: 10px 20px; font-size: 18px; }
+    </style>
+</head>
+<body>
+    <h1>Olá, <span id="user"></span>!</h1>
+    <button onclick="fecharApp()">Fechar App</button>
+
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Expande o Mini App
+        
+        document.getElementById("user").innerText = tg.initDataUnsafe?.user?.first_name || "Usuário";
+
+        function fecharApp() {
+            tg.close();
+        }
+    </script>
+</body>
+</html>
