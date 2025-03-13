@@ -47,20 +47,26 @@
 
         // Função para exibir o anúncio In-App Interstitial
         function exibirInterstitial() {
-            show_9081224({ 
-                type: 'inApp', 
-                inAppSettings: { 
-                    frequency: 2, 
-                    capping: 0.1, 
-                    interval: 30, 
-                    timeout: 5, 
-                    everyPage: false 
-                } 
-            }).then(() => {
-                console.log("Anúncio In-App exibido com sucesso.");
-            }).catch(e => {
-                console.error("Erro ao exibir o anúncio In-App: ", e);
-            });
+            if (typeof show_9081224 === "function") {
+                // Chama o anúncio In-App Interstitial com as configurações
+                show_9081224({
+                    type: 'inApp', 
+                    inAppSettings: { 
+                        frequency: 2, 
+                        capping: 0.1, 
+                        interval: 30, 
+                        timeout: 5, 
+                        everyPage: false 
+                    } 
+                }).then(() => {
+                    console.log("Anúncio In-App exibido com sucesso.");
+                }).catch(e => {
+                    console.error("Erro ao exibir o anúncio In-App: ", e);
+                    alert("Houve um erro ao tentar exibir o anúncio.");
+                });
+            } else {
+                alert("Erro: o SDK de anúncios não foi carregado corretamente.");
+            }
         }
     </script>
 </body>
