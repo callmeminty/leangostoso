@@ -3,112 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Clicker Game</title>
+    <title>Game with Ads</title>
 
-    <!-- Script de anúncios -->
+    <!-- Script for Ads -->
     <script async src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
             text-align: center;
-            font-family: 'Press Start 2P', cursive;
-            background: url('https://source.unsplash.com/random/800x600?arcade') no-repeat center center/cover;
-            color: white;
-            margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 10px;
+            cursor: pointer;
         }
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .click-button {
-            background: linear-gradient(45deg, #ffcc00, #ff6600);
-            border: none;
-            padding: 20px 40px;
-            font-size: 24px;
-            cursor: pointer;
-            border-radius: 15px;
-            color: white;
-            font-weight: bold;
-            transition: 0.3s;
-            margin: 20px;
-        }
-        .click-button:hover {
-            transform: scale(1.1);
-            background: linear-gradient(45deg, #ff6600, #ffcc00);
         }
         .score {
-            font-size: 20px;
-            margin-top: 10px;
-        }
-        .buttons {
-            margin-top: 20px;
-        }
-        button {
-            background: linear-gradient(45deg, #00ffcc, #0066ff);
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            transition: 0.3s;
-            margin: 5px;
-        }
-        button:hover {
-            transform: scale(1.1);
-            background: linear-gradient(45deg, #0099ff, #00ff99);
+            font-size: 30px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>Clicker Game</h1>
-        <button class="click-button" onclick="increaseScore()">Click Me!</button>
-        <div class="score">Score: <span id="score">0</span></div>
-        <div class="buttons">
-            <button onclick="mostrarPopup()">Popup Ad</button>
-            <button onclick="mostrarPopupRecompensa()">Rewarded Ad</button>
-            <button onclick="exibirInterstitial()">In-App Ad</button>
-        </div>
+        <h1>Game with Ads!</h1>
+        <div class="score" id="score">Score: 0</div>
+        <button onclick="clickButton()">Click to Earn Points</button>
+        <br>
+        <button onclick="toggleAds()">Toggle Ads: <span id="adsStatus">On</span></button>
+
+        <button onclick="mostrarPopup()">Watch Popup Ad</button>
+        <button onclick="mostrarPopupRecompensa()">Watch Rewarded Ad</button>
+        <button onclick="exibirInterstitial()">Watch In-App Ad</button>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand();
-        
+        tg.expand(); // Expands the WebApp
+
         let score = 0;
-        let multiplier = 1;
+        let adsEnabled = true;
 
-        function increaseScore() {
-            score += 1 * multiplier;
-            document.getElementById("score").innerText = score;
+        // Game function to increase the score when the button is clicked
+        function clickButton() {
+            score++;
+            document.getElementById('score').innerText = "Score: " + score;
+
+            if (adsEnabled) {
+                // Show an ad after every click if ads are enabled
+                showAd();
+            }
         }
 
+        // Function to toggle ads on/off
+        function toggleAds() {
+            adsEnabled = !adsEnabled;
+            document.getElementById('adsStatus').innerText = adsEnabled ? 'On' : 'Off';
+        }
+
+        // Function to show a Popup Ad
         function mostrarPopup() {
-            show_9081224('pop').then(() => alert('Popup Ad watched!'))
-                .catch(e => alert('Error showing Popup Ad.'));
+            show_9081224('pop').then(() => {
+                alert('You watched a Popup Ad!');
+            }).catch(e => {
+                console.error("Error with Popup Ad:", e);
+                alert("Error showing Popup Ad.");
+            });
         }
 
+        // Function to show a Rewarded Ad
         function mostrarPopupRecompensa() {
             show_9081224().then(() => {
-                alert('Rewarded Ad watched! Score x2 for 30 seconds!');
-                multiplier = 2;
-                setTimeout(() => multiplier = 1, 30000);
-            }).catch(e => alert('Error showing Rewarded Ad.'));
+                alert('You watched a Rewarded Ad and earned points!');
+                score += 5; // Give bonus points for watching the ad
+                document.getElementById('score').innerText = "Score: " + score;
+            }).catch(e => {
+                console.error("Error with Rewarded Ad:", e);
+                alert("Error showing Rewarded Ad.");
+            });
         }
 
+        // Function to show an In-App Interstitial Ad
         function exibirInterstitial() {
-            show_9081224({
-                type: 'inApp',
-                inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
-            }).then(() => console.log("In-App Ad shown"))
-                .catch(e => alert('Error showing In-App Ad.'));
+            if (typeof show_9081224 === "function") {
+                show_9081224({
+                    type: 'inApp',
+                    inAppSettings: {
+                        frequency: 2,
+                        capping: 0.1,
+                        interval: 30,
+                        timeout: 5,
+                        everyPage: false
+                    }
+                }).then(() => {
+                    console.log("In-App Ad shown successfully.");
+                }).catch(e => {
+                    console.error("Error with In-App Ad:", e);
+                    alert("Error showing In-App Ad.");
+                });
+            } else {
+                alert("Error: SDK not loaded correctly.");
+            }
+        }
+
+        // Function to show an ad after each click if ads are enabled
+        function showAd() {
+            if (adsEnabled) {
+                let randomAd = Math.random();
+                if (randomAd < 0.33) {
+                    mostrarPopup(); // Show Popup Ad
+                } else if (randomAd < 0.66) {
+                    mostrarPopupRecompensa(); // Show Rewarded Ad
+                } else {
+                    exibirInterstitial(); // Show In-App Ad
+                }
+            }
         }
     </script>
 </body>
