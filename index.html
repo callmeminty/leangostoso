@@ -3,128 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game with Ads</title>
-
-    <!-- Script for Ads -->
+    <title>Meu Mini App</title>
+    
+    <!-- Script de anúncios de forma assíncrona -->
     <script async src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
 
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin-top: 50px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .score {
-            font-size: 30px;
-            margin-bottom: 20px;
-        }
+        body { text-align: center; font-family: Arial, sans-serif; }
+        button { padding: 10px 20px; font-size: 18px; margin-top: 10px; }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <h1>Game with Ads!</h1>
-        <div class="score" id="score">Score: 0</div>
-        <button onclick="clickButton()">Click to Earn Points</button>
-        <br>
-        <button onclick="toggleAds()">Toggle Ads: <span id="adsStatus">On</span></button>
-
-        <button onclick="mostrarPopup()">Watch Popup Ad</button>
-        <button onclick="mostrarPopupRecompensa()">Watch Rewarded Ad</button>
-        <button onclick="exibirInterstitial()">Watch In-App Ad</button>
-    </div>
+    <h1>Olá, <span id="user"></span>!</h1>
+    <button onclick="fecharApp()">Fechar App</button>
+    
+    <!-- Botões para exibir os anúncios -->
+    <button onclick="mostrarPopup()">Mostrar Popup</button>
+    <button onclick="mostrarPopupRecompensa()">Assistir Anúncio (Rewarded)</button>
+    <button onclick="exibirInterstitial()">Mostrar Anúncio In-App</button>
 
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand(); // Expands the WebApp
+        tg.expand(); // Expande o Mini App
+        
+        document.getElementById("user").innerText = tg.initDataUnsafe?.user?.first_name || "Usuário";
 
-        let score = 0;
-        let adsEnabled = true;
-
-        // Game function to increase the score when the button is clicked
-        function clickButton() {
-            score++;
-            document.getElementById('score').innerText = "Score: " + score;
-
-            if (adsEnabled) {
-                // Show an ad after every click if ads are enabled
-                showAd();
-            }
+        function fecharApp() {
+            tg.close();
         }
 
-        // Function to toggle ads on/off
-        function toggleAds() {
-            adsEnabled = !adsEnabled;
-            document.getElementById('adsStatus').innerText = adsEnabled ? 'On' : 'Off';
-        }
-
-        // Function to show a Popup Ad
+        // Função para exibir o Popup
         function mostrarPopup() {
             show_9081224('pop').then(() => {
-                alert('You watched a Popup Ad!');
+                // O usuário assistiu o anúncio até o fim
+                alert('Você assistiu ao Popup!');
             }).catch(e => {
-                console.error("Error with Popup Ad:", e);
-                alert("Error showing Popup Ad.");
+                // Erro ao tentar exibir o anúncio
+                console.error("Erro ao carregar o Popup: ", e);
+                alert("Houve um erro ao tentar exibir o Popup.");
             });
         }
 
-        // Function to show a Rewarded Ad
+        // Função para exibir o anúncio de recompensa
         function mostrarPopupRecompensa() {
             show_9081224().then(() => {
-                alert('You watched a Rewarded Ad and earned points!');
-                score += 5; // Give bonus points for watching the ad
-                document.getElementById('score').innerText = "Score: " + score;
+                // Usuário assistiu ao anúncio até o fim
+                alert('Você assistiu ao anúncio!');
             }).catch(e => {
-                console.error("Error with Rewarded Ad:", e);
-                alert("Error showing Rewarded Ad.");
+                // Erro ao tentar exibir o anúncio
+                console.error("Erro ao carregar o anúncio Rewarded: ", e);
+                alert("Houve um erro ao tentar exibir o anúncio.");
             });
         }
 
-        // Function to show an In-App Interstitial Ad
+        // Função para exibir o anúncio In-App Interstitial
         function exibirInterstitial() {
             if (typeof show_9081224 === "function") {
                 show_9081224({
                     type: 'inApp',
-                    inAppSettings: {
-                        frequency: 2,
-                        capping: 0.1,
-                        interval: 30,
-                        timeout: 5,
-                        everyPage: false
-                    }
+                    inAppSettings: { 
+                        frequency: 2, 
+                        capping: 0.1, 
+                        interval: 30, 
+                        timeout: 5, 
+                        everyPage: false 
+                    } 
                 }).then(() => {
-                    console.log("In-App Ad shown successfully.");
+                    console.log("Anúncio In-App exibido com sucesso.");
                 }).catch(e => {
-                    console.error("Error with In-App Ad:", e);
-                    alert("Error showing In-App Ad.");
+                    console.error("Erro ao exibir o anúncio In-App: ", e);
+                    alert("Houve um erro ao tentar exibir o anúncio.");
                 });
             } else {
-                alert("Error: SDK not loaded correctly.");
-            }
-        }
-
-        // Function to show an ad after each click if ads are enabled
-        function showAd() {
-            if (adsEnabled) {
-                let randomAd = Math.random();
-                if (randomAd < 0.33) {
-                    mostrarPopup(); // Show Popup Ad
-                } else if (randomAd < 0.66) {
-                    mostrarPopupRecompensa(); // Show Rewarded Ad
-                } else {
-                    exibirInterstitial(); // Show In-App Ad
-                }
+                alert("Erro: o SDK de anúncios não foi carregado corretamente.");
             }
         }
     </script>
