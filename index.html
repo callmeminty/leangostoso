@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clicker Game with Ads</title>
+    <title>Ultimate Arcade Game</title>
 
     <!-- Script de anúncios -->
     <script async src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
@@ -12,78 +12,79 @@
     <style>
         body {
             text-align: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #1e1e1e, #333);
+            font-family: 'Press Start 2P', cursive;
+            background: url('https://source.unsplash.com/random/800x600?arcade') no-repeat center center/cover;
             color: white;
-            margin-top: 50px;
+            margin: 0;
+            padding: 0;
         }
         .game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: rgba(30, 30, 30, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            animation: fadeIn 1s ease-in-out;
+            justify-content: center;
+            height: 100vh;
         }
-        .score {
-            font-size: 40px;
-            margin-bottom: 20px;
-            font-weight: bold;
+        canvas {
+            background: black;
+            border: 5px solid #ffcc00;
+        }
+        .buttons {
+            margin-top: 20px;
         }
         button {
-            background: linear-gradient(45deg, #ff9800, #ff5722);
+            background: linear-gradient(45deg, #00ffcc, #0066ff);
             border: none;
             padding: 15px 30px;
-            font-size: 20px;
-            margin: 10px;
+            font-size: 16px;
             cursor: pointer;
             border-radius: 10px;
             color: white;
             font-weight: bold;
             transition: 0.3s;
-            box-shadow: 0 5px 10px rgba(255, 152, 0, 0.3);
+            margin: 5px;
         }
         button:hover {
             transform: scale(1.1);
-            background: linear-gradient(45deg, #e68900, #e53935);
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            background: linear-gradient(45deg, #0099ff, #00ff99);
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>🔥 Addictive Clicker Game! 🔥</h1>
-        <div class="score" id="score">Score: 0</div>
-        <button onclick="clickButton()">Click to Earn Points</button>
-        <button onclick="toggleAds()">Toggle Ads: <span id="adsStatus">On</span></button>
-        <button onclick="mostrarPopup()">Watch Popup Ad</button>
-        <button onclick="mostrarPopupRecompensa()">Watch Rewarded Ad</button>
-        <button onclick="exibirInterstitial()">Watch In-App Ad</button>
+        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div class="buttons">
+            <button onclick="mostrarPopup()">Popup Ad</button>
+            <button onclick="mostrarPopupRecompensa()">Rewarded Ad</button>
+            <button onclick="exibirInterstitial()">In-App Ad</button>
+        </div>
     </div>
 
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
 
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        let player = { x: 200, y: 350, size: 20, color: "#ffcc00" };
         let score = 0;
-        let multiplier = 1;
-        let adsEnabled = true;
 
-        function clickButton() {
-            score += multiplier;
-            document.getElementById('score').innerText = "Score: " + score;
-            if (adsEnabled) showAd();
+        function drawPlayer() {
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.size, player.size);
         }
 
-        function toggleAds() {
-            adsEnabled = !adsEnabled;
-            document.getElementById('adsStatus').innerText = adsEnabled ? 'On' : 'Off';
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            requestAnimationFrame(gameLoop);
         }
+        gameLoop();
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft" && player.x > 0) player.x -= 20;
+            if (e.key === "ArrowRight" && player.x < canvas.width - player.size) player.x += 20;
+        });
 
         function mostrarPopup() {
             show_9081224('pop').then(() => alert('Popup Ad watched!'))
@@ -92,11 +93,9 @@
 
         function mostrarPopupRecompensa() {
             show_9081224().then(() => {
-                alert('Rewarded Ad watched! Multiplier x2 for 30 seconds!');
-                multiplier = 2;
-                setTimeout(() => {
-                    multiplier = 1;
-                }, 30000);
+                alert('Rewarded Ad watched! Score x2 for 30 seconds!');
+                score *= 2;
+                setTimeout(() => score /= 2, 30000);
             }).catch(e => alert('Error showing Rewarded Ad.'));
         }
 
@@ -106,13 +105,6 @@
                 inAppSettings: { frequency: 2, capping: 0.1, interval: 30, timeout: 5, everyPage: false }
             }).then(() => console.log("In-App Ad shown"))
                 .catch(e => alert('Error showing In-App Ad.'));
-        }
-
-        function showAd() {
-            let randomAd = Math.random();
-            if (randomAd < 0.33) mostrarPopup();
-            else if (randomAd < 0.66) mostrarPopupRecompensa();
-            else exibirInterstitial();
         }
     </script>
 </body>
