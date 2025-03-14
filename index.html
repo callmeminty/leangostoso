@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Arcade Game</title>
+    <title>Ultimate Clicker Game</title>
 
     <!-- Script de anúncios -->
     <script async src='//whephiwums.com/sdk.js' data-zone='9081224' data-sdk='show_9081224'></script>
@@ -25,9 +25,25 @@
             justify-content: center;
             height: 100vh;
         }
-        canvas {
-            background: black;
-            border: 5px solid #ffcc00;
+        .click-button {
+            background: linear-gradient(45deg, #ffcc00, #ff6600);
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 15px;
+            color: white;
+            font-weight: bold;
+            transition: 0.3s;
+            margin: 20px;
+        }
+        .click-button:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #ff6600, #ffcc00);
+        }
+        .score {
+            font-size: 20px;
+            margin-top: 10px;
         }
         .buttons {
             margin-top: 20px;
@@ -52,7 +68,9 @@
 </head>
 <body>
     <div class="game-container">
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <h1>Clicker Game</h1>
+        <button class="click-button" onclick="increaseScore()">Click Me!</button>
+        <div class="score">Score: <span id="score">0</span></div>
         <div class="buttons">
             <button onclick="mostrarPopup()">Popup Ad</button>
             <button onclick="mostrarPopupRecompensa()">Rewarded Ad</button>
@@ -63,28 +81,14 @@
     <script>
         let tg = window.Telegram.WebApp;
         tg.expand();
-
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        let player = { x: 200, y: 350, size: 20, color: "#ffcc00" };
+        
         let score = 0;
+        let multiplier = 1;
 
-        function drawPlayer() {
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.size, player.size);
+        function increaseScore() {
+            score += 1 * multiplier;
+            document.getElementById("score").innerText = score;
         }
-
-        function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawPlayer();
-            requestAnimationFrame(gameLoop);
-        }
-        gameLoop();
-
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowLeft" && player.x > 0) player.x -= 20;
-            if (e.key === "ArrowRight" && player.x < canvas.width - player.size) player.x += 20;
-        });
 
         function mostrarPopup() {
             show_9081224('pop').then(() => alert('Popup Ad watched!'))
@@ -94,8 +98,8 @@
         function mostrarPopupRecompensa() {
             show_9081224().then(() => {
                 alert('Rewarded Ad watched! Score x2 for 30 seconds!');
-                score *= 2;
-                setTimeout(() => score /= 2, 30000);
+                multiplier = 2;
+                setTimeout(() => multiplier = 1, 30000);
             }).catch(e => alert('Error showing Rewarded Ad.'));
         }
 
