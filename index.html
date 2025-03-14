@@ -13,7 +13,7 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
-            background-color: #121212;
+            background: linear-gradient(135deg, #1e1e1e, #333);
             color: white;
             margin-top: 50px;
         }
@@ -21,35 +21,43 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #1e1e1e;
+            background: rgba(30, 30, 30, 0.9);
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: fadeIn 1s ease-in-out;
         }
         .score {
-            font-size: 30px;
+            font-size: 40px;
             margin-bottom: 20px;
+            font-weight: bold;
         }
         button {
-            background: #ff9800;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
             border: none;
-            padding: 12px 24px;
-            font-size: 18px;
-            margin: 8px;
+            padding: 15px 30px;
+            font-size: 20px;
+            margin: 10px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
             color: white;
             font-weight: bold;
             transition: 0.3s;
+            box-shadow: 0 5px 10px rgba(255, 152, 0, 0.3);
         }
         button:hover {
-            background: #e68900;
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #e68900, #e53935);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <h1>Clicker Game!</h1>
+        <h1>🔥 Addictive Clicker Game! 🔥</h1>
         <div class="score" id="score">Score: 0</div>
         <button onclick="clickButton()">Click to Earn Points</button>
         <button onclick="toggleAds()">Toggle Ads: <span id="adsStatus">On</span></button>
@@ -63,10 +71,11 @@
         tg.expand();
 
         let score = 0;
+        let multiplier = 1;
         let adsEnabled = true;
 
         function clickButton() {
-            score++;
+            score += multiplier;
             document.getElementById('score').innerText = "Score: " + score;
             if (adsEnabled) showAd();
         }
@@ -83,9 +92,11 @@
 
         function mostrarPopupRecompensa() {
             show_9081224().then(() => {
-                alert('Rewarded Ad watched! +5 points');
-                score += 5;
-                document.getElementById('score').innerText = "Score: " + score;
+                alert('Rewarded Ad watched! Multiplier x2 for 30 seconds!');
+                multiplier = 2;
+                setTimeout(() => {
+                    multiplier = 1;
+                }, 30000);
             }).catch(e => alert('Error showing Rewarded Ad.'));
         }
 
