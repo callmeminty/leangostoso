@@ -387,8 +387,8 @@
 
         // Watch Ad Function
         function watchAd() {
-            show_9096341('pop').then(() => {
-                balance += 0.005;
+            show_9096341().then(() => {
+                balance += 0.005; // Reward for watching the ad
                 localStorage.setItem('balance', balance);
                 updateUI();
                 alert('You earned $0.005!');
@@ -409,7 +409,7 @@
 
             // Show rewarded ad every 50 clicks
             if (clickCount % 50 === 0) {
-                show_9096341('pop').then(() => {
+                show_9096341().then(() => {
                     balance += 0.01; // Bonus for watching the ad
                     localStorage.setItem('balance', balance);
                     updateUI();
