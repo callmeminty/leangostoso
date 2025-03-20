@@ -308,10 +308,7 @@
     <section id="home">
         <h2>Welcome to Lootora</h2>
         <p>Watch ads and earn amazing rewards effortlessly! Start earning today and redeem your balance for exciting gifts.</p>
-        <div class="profile-info">
-            <p>Balance: <span id="balance">$0.00</span></p>
-        </div>
-        <button onclick="watchAd()">Watch Ad & Earn</button>
+        <button onclick="redirectToProfile()">Watch Ad & Earn</button>
     </section>
     
     <section id="how-it-works">
@@ -421,6 +418,11 @@
                     alert('Ad failed to load. Try again later.');
                 });
             }
+        }
+
+        // Redirect to Profile Section
+        function redirectToProfile() {
+            window.location.href = "#profile";
         }
 
         document.getElementById('clicker-button').addEventListener('click', handleClick);
