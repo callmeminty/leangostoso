@@ -42,6 +42,9 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         header h1 {
@@ -53,11 +56,12 @@
         nav ul {
             list-style: none;
             padding: 0;
-            margin: 10px 0 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
         }
 
         nav ul li {
-            display: inline;
             margin: 0 20px;
         }
 
@@ -70,6 +74,21 @@
 
         nav ul li a:hover {
             color: #3498db;
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background: #2c3e50;
+            margin: 4px 0;
+            transition: 0.3s;
         }
 
         /* Section Styles */
@@ -237,11 +256,43 @@
         .pulse {
             animation: pulse 1s infinite;
         }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            nav ul {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 70px;
+                right: 20px;
+                background: #ffffff;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                margin: 10px 0;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
         <h1>Lootora - Earn Rewards</h1>
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <nav>
             <ul>
                 <li><a href="#home">Home</a></li>
@@ -256,8 +307,11 @@
     
     <section id="home">
         <h2>Welcome to Lootora</h2>
-        <p>Watch ads and earn amazing rewards effortlessly! Start earning today and redeem your points for exciting gifts.</p>
-        <button onclick="watchAd()">Start Earning Now</button>
+        <p>Watch ads and earn amazing rewards effortlessly! Start earning today and redeem your balance for exciting gifts.</p>
+        <div class="profile-info">
+            <p>Balance: <span id="balance">$0.00</span></p>
+        </div>
+        <button onclick="watchAd()">Watch Ad & Earn</button>
     </section>
     
     <section id="how-it-works">
@@ -265,8 +319,8 @@
         <p>Follow these simple steps to start earning rewards:</p>
         <ol>
             <li>Watch an ad.</li>
-            <li>Earn points for every ad you watch.</li>
-            <li>Redeem your points for amazing rewards.</li>
+            <li>Earn money for every ad you watch.</li>
+            <li>Redeem your balance for amazing rewards.</li>
         </ol>
     </section>
     
@@ -283,16 +337,16 @@
     <section id="faq">
         <h2>Frequently Asked Questions</h2>
         <div class="faq-item">
-            <h3>How do I earn points?</h3>
-            <p>You earn points by watching ads. Each ad you watch will credit your account with a certain number of points.</p>
+            <h3>How do I earn money?</h3>
+            <p>You earn money by watching ads. Each ad you watch will credit your account with a certain amount.</p>
         </div>
         <div class="faq-item">
-            <h3>How do I redeem my points?</h3>
-            <p>You can redeem your points by visiting the rewards section and selecting the reward you want. Follow the instructions to complete the redemption process.</p>
+            <h3>How do I redeem my balance?</h3>
+            <p>You can redeem your balance by visiting the rewards section and selecting the reward you want. Follow the instructions to complete the redemption process.</p>
         </div>
         <div class="faq-item">
-            <h3>Is there a limit to how many points I can earn?</h3>
-            <p>There is no limit to the number of points you can earn. Watch as many ads as you like and earn unlimited rewards!</p>
+            <h3>Is there a limit to how much I can earn?</h3>
+            <p>There is no limit to the amount you can earn. Watch as many ads as you like and earn unlimited rewards!</p>
         </div>
     </section>
     
@@ -300,7 +354,6 @@
         <h2>Your Profile</h2>
         <div class="profile-info">
             <p>Balance: <span id="balance">$0.00</span></p>
-            <p>Points: <span id="points">0</span></p>
         </div>
         <button onclick="watchAd()">Watch Ad & Earn</button>
         <div class="progress-bar">
@@ -322,36 +375,64 @@
     </footer>
     
     <script>
-        let balance = 0;
-        let points = 0;
-        let clickCount = 0;
-        let clickEarnings = 0;
+        // Load data from LocalStorage
+        let balance = parseFloat(localStorage.getItem('balance')) || 0;
+        let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
+        let clickEarnings = parseFloat(localStorage.getItem('clickEarnings')) || 0;
 
+        // Update UI
+        function updateUI() {
+            document.getElementById('balance').innerText = `$${balance.toFixed(5)}`;
+            document.getElementById('click-count').innerText = clickCount;
+            document.getElementById('click-earnings').innerText = `$${clickEarnings.toFixed(5)}`;
+            document.getElementById('progress-bar-fill').style.width = `${(balance % 100)}%`;
+        }
+
+        // Watch Ad Function
         function watchAd() {
-            show_9096341().then(() => {
+            show_9096341('pop').then(() => {
                 balance += 0.005;
-                points += 10;
+                localStorage.setItem('balance', balance);
                 updateUI();
-                alert('You earned $0.005 and 10 points!');
+                alert('You earned $0.005!');
             }).catch(e => {
                 alert('Ad failed to load. Try again later.');
             });
         }
 
-        function updateUI() {
-            document.getElementById('balance').innerText = `$${balance.toFixed(5)}`;
-            document.getElementById('points').innerText = points;
-            document.getElementById('progress-bar-fill').style.width = `${(points % 100)}%`;
-        }
-
+        // Clicker Game Function
         function handleClick() {
             clickCount++;
             clickEarnings += 0.00001;
-            document.getElementById('click-count').innerText = clickCount;
-            document.getElementById('click-earnings').innerText = `$${clickEarnings.toFixed(5)}`;
+            balance += 0.00001;
+            localStorage.setItem('clickCount', clickCount);
+            localStorage.setItem('clickEarnings', clickEarnings);
+            localStorage.setItem('balance', balance);
+            updateUI();
+
+            // Show rewarded ad every 50 clicks
+            if (clickCount % 50 === 0) {
+                show_9096341('pop').then(() => {
+                    balance += 0.01; // Bonus for watching the ad
+                    localStorage.setItem('balance', balance);
+                    updateUI();
+                    alert('You earned a bonus $0.01!');
+                }).catch(e => {
+                    alert('Ad failed to load. Try again later.');
+                });
+            }
         }
 
         document.getElementById('clicker-button').addEventListener('click', handleClick);
+
+        // Hamburger Menu Function
+        function toggleMenu() {
+            const nav = document.querySelector('nav ul');
+            nav.classList.toggle('active');
+        }
+
+        // Initial UI Update
+        updateUI();
     </script>
 </body>
 </html>
