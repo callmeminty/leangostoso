@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <script src='//whephiwums.com/sdk.js' data-zone='9096341' data-sdk='show_9096341'></script>
     <style>
+        /* General Styles */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -15,36 +16,77 @@
             margin: 0;
             padding: 0;
             text-align: center;
+            line-height: 1.6;
         }
+
+        h1, h2, h3 {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+        }
+
+        a {
+            color: #ff9800;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #e68900;
+        }
+
+        /* Header Styles */
         header {
             background: rgba(0, 0, 0, 0.9);
             padding: 20px;
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
-            font-size: 22px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
         nav ul {
             list-style: none;
             padding: 0;
+            margin: 10px 0 0;
         }
+
         nav ul li {
             display: inline;
             margin: 0 20px;
         }
+
         nav ul li a {
             color: white;
             text-decoration: none;
             font-weight: bold;
             font-size: 18px;
         }
+
+        /* Section Styles */
         section {
-            padding: 50px 20px;
+            padding: 60px 20px;
             margin: 20px auto;
             max-width: 900px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
         }
+
+        section h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        section p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Button Styles */
         button {
             background: #ff9800;
             color: white;
@@ -56,15 +98,65 @@
             transition: 0.3s;
             font-weight: bold;
         }
+
         button:hover {
             background: #e68900;
             transform: scale(1.05);
         }
+
+        /* Footer Styles */
         footer {
             margin-top: 50px;
             padding: 25px;
             background: rgba(0, 0, 0, 0.9);
             font-size: 14px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* Additional Styles */
+        .reward-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reward-list li {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+        }
+
+        .faq-item h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .profile-info {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .profile-info span {
+            font-weight: bold;
+            color: #ff9800;
+        }
+
+        .ad-container {
+            margin-top: 20px;
+        }
+
+        .ad-container iframe {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
@@ -84,48 +176,83 @@
     
     <section id="home">
         <h2>Welcome to Lootora</h2>
-        <p>Watch ads and earn amazing rewards effortlessly!</p>
+        <p>Watch ads and earn amazing rewards effortlessly! Start earning today and redeem your points for exciting gifts.</p>
+        <button onclick="watchAd()">Start Earning Now</button>
     </section>
     
     <section id="how-it-works">
         <h2>How It Works</h2>
-        <p>1. Watch an ad. 2. Earn points. 3. Redeem for rewards.</p>
+        <p>Follow these simple steps to start earning rewards:</p>
+        <ol>
+            <li>Watch an ad.</li>
+            <li>Earn points for every ad you watch.</li>
+            <li>Redeem your points for amazing rewards.</li>
+        </ol>
     </section>
     
     <section id="rewards">
         <h2>Available Rewards</h2>
-        <ul>
-            <li>Gift Cards</li>
-            <li>Crypto Rewards</li>
-            <li>Discount Coupons</li>
+        <ul class="reward-list">
+            <li>Gift Cards (Amazon, Google Play, Steam)</li>
+            <li>Crypto Rewards (Bitcoin, Ethereum)</li>
+            <li>Discount Coupons (Popular Brands)</li>
+            <li>Exclusive Merchandise</li>
         </ul>
     </section>
     
     <section id="faq">
         <h2>Frequently Asked Questions</h2>
-        <p>Find answers to common questions here.</p>
+        <div class="faq-item">
+            <h3>How do I earn points?</h3>
+            <p>You earn points by watching ads. Each ad you watch will credit your account with a certain number of points.</p>
+        </div>
+        <div class="faq-item">
+            <h3>How do I redeem my points?</h3>
+            <p>You can redeem your points by visiting the rewards section and selecting the reward you want. Follow the instructions to complete the redemption process.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Is there a limit to how many points I can earn?</h3>
+            <p>There is no limit to the number of points you can earn. Watch as many ads as you like and earn unlimited rewards!</p>
+        </div>
     </section>
     
     <section id="profile">
         <h2>Your Profile</h2>
-        <p>Balance: <span id="balance">0</span> Points</p>
+        <div class="profile-info">
+            <p>Balance: <span id="balance">0</span> Points</p>
+        </div>
         <button onclick="watchAd()">Watch Ad & Earn</button>
+        <div class="ad-container">
+            <!-- Ad placeholder -->
+        </div>
     </section>
     
     <footer>
         <p>&copy; 2025 Lootora. All rights reserved.</p>
+        <p><a href="#privacy-policy">Privacy Policy</a> | <a href="#terms-of-service">Terms of Service</a></p>
     </footer>
     
     <script>
+        let balance = 0;
+
         function watchAd() {
             show_9096341().then(() => {
-                let balance = parseInt(document.getElementById('balance').innerText);
-                document.getElementById('balance').innerText = balance + 10;
+                balance += 10;
+                document.getElementById('balance').innerText = balance;
                 alert('You earned 10 points!');
             }).catch(e => {
                 alert('Ad failed to load. Try again later.');
             });
         }
+
+        // Simulate ad loading
+        function loadAd() {
+            const adContainer = document.querySelector('.ad-container');
+            adContainer.innerHTML = '<iframe src="https://example.com/ad" width="300" height="250"></iframe>';
+        }
+
+        // Load ad on page load
+        window.onload = loadAd;
     </script>
 </body>
 </html>
